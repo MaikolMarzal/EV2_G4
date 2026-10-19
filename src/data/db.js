@@ -1,17 +1,44 @@
-// Datos iniciales de prueba
-export const productosIniciales = [
-    {id: 1, nombre: "Teclado Gamer RGB", precio: 45990, categoria: "Periféricos", stock: 10},
-    {id: 2, nombre: "Mouse Inálambrico", precio: 29990, categoria: "Periféricos", stock: 15}
+// src/data/database.js
+
+// 1. DATOS INICIALES SIMULADOS
+let productosDB = [
+    { codigo: "P001", imagen: "https://via.placeholder.com/50", nombre: "Silla Gamer Pro LevelUp", categoria: "Sillas Gamers", precio: 149990 },
+    { codigo: "P002", imagen: "https://via.placeholder.com/50", nombre: "Mouse Logitech G Pro X", categoria: "Mouse", precio: 99990 }
 ];
 
-//CRUD
-export const obtenerProductos = () => {
-    const data = localStorage.getItem('productos');
-    return data ? JSON.parse(data) : productosIniciales;
+let usuariosDB = [
+    { id: 101, nombre: "Juan Pérez", correo: "juan.perez@duocuc.cl", region: "Metropolitana", rol: "Administrador" },
+    { id: 102, nombre: "María Gómez", correo: "maria.gomez@gmail.com", region: "Valparaíso", rol: "Cliente" }
+];
+
+// 2. FUNCIONES CRUD (Crear, Leer, Actualizar, Eliminar)
+
+// --- CRUD PRODUCTOS ---
+export const getProductos = () => {
+    return [...productosDB]; // Leer
 };
 
-export const guardarProducto = (nuevoProducto) => {
-    const productos = obtenerProductos();
-    productos.push(nuevoProducto);
-    localStorage.setItem('productos', JSON.stringify(productos));
+export const crearProducto = (nuevoProducto) => {
+    productosDB.push(nuevoProducto); // Crear
+    return [...productosDB];
+};
+
+export const eliminarProductoDB = (codigo) => {
+    productosDB = productosDB.filter(prod => prod.codigo !== codigo); // Eliminar
+    return [...productosDB];
+};
+
+// --- CRUD USUARIOS ---
+export const getUsuarios = () => {
+    return [...usuariosDB]; // Leer
+};
+
+export const crearUsuario = (nuevoUsuario) => {
+    usuariosDB.push(nuevoUsuario); // Crear
+    return [...usuariosDB];
+};
+
+export const eliminarUsuarioDB = (id) => {
+    usuariosDB = usuariosDB.filter(user => user.id !== id); // Eliminar
+    return [...usuariosDB];
 };

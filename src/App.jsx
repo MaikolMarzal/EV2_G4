@@ -1,122 +1,99 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+// 1. IMPORTACIONES DE REACT Y ROUTER
+import React from 'react';
+// BrowserRouter, Routes y Route son las herramientas que nos permiten navegar sin recargar la página
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
+// Mantenemos tu archivo de estilos global por si tienes algo ahí, aunque usaremos Bootstrap principalmente
+import './App.css';
+
+// ==========================================
+// 2. IMPORTACIÓN DE VISTAS (PÁGINAS)
+// ==========================================
+
+// -> Vistas Públicas (Tienda)
+// Aquí importamos la vista del catálogo que creamos antes
+import CatalogoProductos from './pages/CatalogoProductos';
+// import Contacto from './pages/Contacto'; // (Descomenta esto cuando crees el archivo Contacto.jsx)
+
+// -> Vistas Privadas (Administrador)
+import Dashboard from './pages/admin/Dashboard';
+import AdminProductos from './pages/admin/AdminProductos';
+import FormProductos from './pages/admin/FormProductos';
+import AdminUsuarios from './pages/admin/AdminUsuarios';
+import FormUsuarios from './pages/admin/FormUsuarios';
+
+// ==========================================
+// 3. FUNCIÓN DE SEGURIDAD (RUTA PROTEGIDA)
+// ==========================================
+// Este pequeño componente envuelve las rutas del administrador.
+// Verifica si el usuario guardado en localStorage tiene el rol de "Administrador".
+const RutaProtegida = ({ children }) => {
+  const rol = localStorage.getItem('usuarioRol');
+  
+  if (rol !== 'Administrador') {
+    // Si alguien intenta entrar a /admin y no es administrador, lo expulsa al inicio "/"
+    return <Navigate to="/" />;
+  }
+  
+  // Si es administrador, lo deja ver el contenido (children)
+  return children;
+};
+
+// ==========================================
+// 4. COMPONENTE PRINCIPAL (APP)
+// ==========================================
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    // <Router> envuelve toda la aplicación para habilitar la navegación
+    <Router>
+      {/* <Routes> es como un switch: busca qué ruta coincide con la URL actual y muestra ese componente */}
+      <Routes>
+        
+        {/* -----------------------------------------
+            ZONA PÚBLICA (Lo que ve cualquier cliente)
+            ----------------------------------------- */}
+        {/* Cuando el usuario entra a "localhost:5173/", ve el Catalogo de Productos */}
+        <Route path="/" element={<CatalogoProductos />} />
+        
+        {/* ESPACIO PARA TU COMPAÑERO: Aquí él debe agregar sus rutas (Login, Registro, etc.) */}
+        {/* Ejemplo: <Route path="/login" element={<Login />} /> */}
 
-      <div className="ticks"></div>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+        {/* -----------------------------------------
+            ZONA PRIVADA (Solo para el Administrador)
+            ----------------------------------------- */}
+        {/* Fíjate cómo envolvemos los componentes dentro de <RutaProtegida> */}
+        
+        {/* Panel principal del Administrador */}
+        <Route path="/admin" element={ <RutaProtegida><Dashboard /></RutaProtegida> } />
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+        {/* Rutas para gestionar Productos */}
+        <Route path="/admin/productos" element={ <RutaProtegida><AdminProductos /></RutaProtegida> } />
+        <Route path="/admin/productos/nuevo" element={ <RutaProtegida><FormProductos /></RutaProtegida> } />
+        {/* Esta ruta recibe un ":id" dinámico para saber qué producto editar */}
+        <Route path="/admin/productos/editar/:id" element={ <RutaProtegida><FormProductos /></RutaProtegida> } />
+
+        {/* Rutas para gestionar Usuarios */}
+        <Route path="/admin/usuarios" element={ <RutaProtegida><AdminUsuarios /></RutaProtegida> } />
+        <Route path="/admin/usuarios/nuevo" element={ <RutaProtegida><FormUsuarios /></RutaProtegida> } />
+        {/* Esta ruta recibe un ":id" dinámico para saber qué usuario editar */}
+        <Route path="/admin/usuarios/editar/:id" element={ <RutaProtegida><FormUsuarios /></RutaProtegida> } />
+
+        {/* -----------------------------------------
+            RUTA DE ERROR (404)
+            ----------------------------------------- */}
+        {/* El "*" significa "Cualquier otra URL que no exista en la lista de arriba" */}
+        <Route path="*" element={
+          <div className="container mt-5 text-center">
+            <h2 className="text-danger">Error 404</h2>
+            <p>La página que buscas no existe en Level-Up Gamer.</p>
+          </div>
+        } />
+
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+// Exportamos la App para que main.jsx pueda renderizarla en la pantalla
+export default App;
