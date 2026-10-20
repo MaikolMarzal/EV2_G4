@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Roboto:wght@400;500&display=swap');
+
+:root {
+  --lu-negro: #000000;
+  --lu-azul: #1E90FF;
+  --lu-verde: #39FF14;
+  --lu-gris: #D3D3D3;
+}
+
+body { background-color: var(--lu-negro); color: #fff; font-family: 'Roboto', sans-serif; }
+h1, h2, h3, h4, h5, .navbar-brand { font-family: 'Orbitron', sans-serif; }
+a { color: var(--lu-azul); }
+a:hover { color: var(--lu-verde); }
+
+.text-secundario { color: var(--lu-gris); }
+.precio { color: var(--lu-verde); font-weight: 700; }
+
+.btn-lu { background-color: var(--lu-azul); border-color: var(--lu-azul); color: #fff; }
+.btn-lu:hover { background-color: var(--lu-verde); border-color: var(--lu-verde); color: #000; }
+
+.card-lu { background-color: #111; border: 1px solid #222; color: #fff; transition: transform .2s, box-shadow .2s; }
+.card-lu:hover { transform: translateY(-4px); box-shadow: 0 0 14px var(--lu-azul); }
+
+.hero { background: linear-gradient(135deg, #000 0%, #0a1a33 60%, #0b3d1a 100%); border-bottom: 1px solid #222; }
+
+.form-control, .form-select { background-color: #111; color: #fff; border-color: #333; }
+.form-control:focus, .form-select:focus { background-color: #111; color: #fff; border-color: var(--lu-azul); box-shadow: 0 0 0 .2rem rgba(30,144,255,.25); }
