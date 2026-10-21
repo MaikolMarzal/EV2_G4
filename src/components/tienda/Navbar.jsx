@@ -1,13 +1,16 @@
 import { Link, NavLink } from 'react-router-dom';
 import { useCarrito } from '../../context/CarritoContext';
 import { useAuth } from '../../context/AuthContext';
+import logo from '../../assets/img/logo.png';
 export default function Navbar() {
   const { cantidadTotal } = useCarrito();
     const { usuario, logout } = useAuth();
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-black border-bottom border-secondary sticky-top">
       <div className="container">
-        <Link className="navbar-brand" to="/">🎮 Level-Up Gamer</Link>
+        <Link className="navbar-brand d-flex align-items-center" to="/">
+            <img src={logo} alt="Level-Up Gamer" height="45" />
+        </Link>
 
         <button
           className="navbar-toggler"
