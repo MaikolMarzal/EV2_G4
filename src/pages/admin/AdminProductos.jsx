@@ -1,15 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import SidebarAdmin from '../../components/SidebarAdmin';
-import { getProductos, eliminarProductoDB } from '../../data/database';
+// Importamos el hook del nuevo contexto compartido en lugar de la base de datos estática
+import { useProductos } from '../../context/ProductosContext';
 
 const AdminProductos = () => {
-    const [productos, setProductos] = useState(getProductos());
+    // Extraemos la lista global y la función de eliminar desde el Contexto
+    const { productos, eliminarProducto } = useProductos();
 
-    const eliminarProducto = (codigo) => {
+    // Mantenemos tu validación visual antes de ejecutar la eliminación del contexto
+    const confirmarEliminacion = (codigo) => {
         if(window.confirm("¿Estás seguro de que deseas eliminar este producto del inventario?")) {
-            const nuevaLista = eliminarProductoDB(codigo);
-            setProductos(nuevaLista);
+            eliminarProducto(codigo);
         }
     };
 
@@ -17,7 +19,7 @@ const AdminProductos = () => {
         <div className="container-fluid">
             <div className="row min-vh-100">
                 
-                {/* Reutilizamos el menú lateral[cite: 4] */}
+                {/* Reutilizamos el menú lateral */}
                 <SidebarAdmin />
 
                 {/* CONTENIDO PRINCIPAL */}
@@ -29,7 +31,7 @@ const AdminProductos = () => {
                     </div>
 
                     <div className="card shadow-sm">
-                        <div className="card-body">
+                        <div class="card-body">
                             
                             <div className="table-responsive">
                                 <table className="table table-striped table-hover align-middle">
@@ -44,17 +46,15 @@ const AdminProductos = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {/* Renderizado dinámico de productos[cite: 4] */}
+                                        {/* Renderizado dinámico de productos desde el estado global */}
                                         {productos.map((producto) => (
                                             <tr key={producto.codigo}>
                                                 <td>{producto.codigo}</td>
                                                 <td>
-                                                    {/* En React, las etiquetas img deben cerrarse con /> */}
-                                                    <img src={producto.imagen} alt={producto.nombre} className="img-thumbnail" />
+                                                    <img src={producto.imagen} alt={producto.nombre} className="img-thumbnail" style={{ height: '50px', width: '50px', objectFit: 'cover' }} />
                                                 </td>
                                                 <td>{producto.nombre}</td>
                                                 <td>{producto.categoria}</td>
-                                                {/* Formateamos el precio para Chile */}
                                                 <td>${producto.precio.toLocaleString('es-CL')}</td>
                                                 <td>
                                                     <Link to={`/admin/productos/editar/${producto.codigo}`} className="btn btn-sm btn-outline-secondary me-2">
@@ -62,7 +62,8 @@ const AdminProductos = () => {
                                                     </Link>
                                                     <button 
                                                         className="btn btn-sm btn-outline-danger" 
-                                                        onClick={() => eliminarProducto(producto.codigo)}
+                                                        // Llamamos a la función con confirmación
+                                                        onClick={() => confirmarEliminacion(producto.codigo)}
                                                     >
                                                         Eliminar
                                                     </button>

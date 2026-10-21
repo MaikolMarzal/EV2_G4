@@ -1,12 +1,14 @@
-// 1. IMPORTACIONES DE REACT Y ROUTER
+// src/App.jsx
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
 import './App.css';
 
 // ==========================================
-// 2. IMPORTACIÓN DE VISTAS (PÁGINAS)
+// 1. IMPORTACIÓN DE CONTEXTOS Y VISTAS
 // ==========================================
+// ---> NUEVO: Importamos useAuth para proteger las rutas
+import { useAuth } from './context/AuthContext';
 
 // -> Layout y Vistas de la Tienda
 import TiendaLayout from './components/tienda/TiendaLayout.jsx';
@@ -15,6 +17,11 @@ import Productos from './pages/tienda/Productos';
 import DetalleProducto from './pages/tienda/DetalleProducto';
 import Carrito from './pages/tienda/Carrito';
 
+import Blog from "./pages/tienda/Blog";
+import DetalleBlog from "./pages/tienda/DetallesBlog";
+import Login from "./pages/tienda/Login";
+import Registro from "./pages/tienda/Registro";
+
 // -> Vistas Privadas (Administrador)
 import Dashboard from './pages/admin/Dashboard';
 import AdminProductos from './pages/admin/AdminProductos';
@@ -22,18 +29,15 @@ import FormProductos from './pages/admin/FormProductos';
 import AdminUsuarios from './pages/admin/AdminUsuarios';
 import FormUsuarios from './pages/admin/FormUsuarios';
 
-import Blog from "./pages/tienda/Blog";
-import DetalleBlog from "./pages/tienda/DetallesBlog";
-import Login from "./pages/tienda/Login";
-import Registro from "./pages/tienda/Registro";
-
 // ==========================================
-// 3. FUNCIÓN DE SEGURIDAD (RUTA PROTEGIDA)
+// 2. FUNCIÓN DE SEGURIDAD (RUTA PROTEGIDA)
 // ==========================================
 const RutaProtegida = ({ children }) => {
-  const rol = localStorage.getItem('usuarioRol');
+  // ---> NUEVO: Leemos directamente a tu usuario desde el contexto
+  const { usuario } = useAuth();
   
-  if (rol !== 'Administrador') {
+  // Si no hay usuario o su rol no es "Administrador", lo expulsamos al Home
+  if (usuario?.rol !== 'Administrador') {
     return <Navigate to="/" />;
   }
   
@@ -41,7 +45,7 @@ const RutaProtegida = ({ children }) => {
 };
 
 // ==========================================
-// 4. COMPONENTE PRINCIPAL (APP)
+// 3. COMPONENTE PRINCIPAL (APP)
 // ==========================================
 function App() {
   return (
