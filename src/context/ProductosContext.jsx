@@ -16,7 +16,7 @@ export function ProductosProvider({ children }) {
       setProductos(JSON.parse(guardados));
     } else {
       // Si es la primera vez, cargamos la lista original que tu compañero y tú crearon
-      const iniciales = getProductos(); 
+      const iniciales = obtenerProductos(); 
       setProductos(iniciales);
       localStorage.setItem("productosGlobales", JSON.stringify(iniciales));
     }
