@@ -7,6 +7,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 // Ruta de tu CSS
+import "./index.css";
+import "./assets/custom.css";
 import "./assets/css/style.css";
 
 // 1. IMPORTAMOS TUS CONTEXTOS

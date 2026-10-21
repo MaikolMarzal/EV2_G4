@@ -12,17 +12,29 @@ module.exports = function (config) {
       resolve: { extensions: [".js", ".jsx"] },
       module: {
         rules: [
+          { test: /\.m?jsx?$/, resolve: { fullySpecified: false } },
           {
-            test: /\.m?jsx?$/,
-            resolve: { fullySpecified: false },
+            test: /\.jsx?$/,
+            exclude: /node_modules/,
+            use: {
+              loader: "babel-loader",
+              options: {
+                plugins: [
+                  ["istanbul", { exclude: ["**/*.spec.js", "**/*.spec.jsx"] }],
+                ],
+              },
+            },
           },
-          { test: /\.jsx?$/, exclude: /node_modules/, use: "babel-loader" },
           { test: /\.css$/, use: ["style-loader", "css-loader"] },
         ],
       },
     },
     browsers: ["ChromeHeadless"],
-    reporters: ["progress"],
+    reporters: ["progress", "coverage"],
+    coverageReporter: {
+      dir: "coverage",
+      reporters: [{ type: "text-summary" }, { type: "html" }],
+    },
     singleRun: true,
   });
 };
